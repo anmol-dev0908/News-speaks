@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <title>NewsSpeaks</title>
+
+    <!-- CSS FILES -->
+
+    <link rel="stylesheet"
+    href="css/style.css">
+
+    <link rel="stylesheet"
+    href="css/responsive.css">
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar">
+
+        <!-- LOGO -->
+
+        <div class="logo">
+            NewsSpeaks
+        </div>
+
+        <!-- WELCOME USER -->
+
+        <div class="welcome-text"
+        id="userName">
+
+            Welcome!!
+
+        </div>
+
+        <!-- RIGHT SIDE NAV -->
+
+        <div class="right-nav">
+
+            <!-- HOME BUTTON -->
+
+            <a href="index.html"
+            class="home-btn">
+
+                Home
+
+            </a>
+
+            <!-- LOGOUT BUTTON -->
+
+            <button id="logoutBtn">
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </nav>
+
+    <!-- HERO SECTION -->
+
+    <section class="hero">
+
+        <h1>
+            Top Headlines
+        </h1>
+
+        <p>
+            Latest Trending News Around The World
+        </p>
+
+    </section>
+
+    <!-- FILTER SECTION -->
+
+    <section class="filters">
+
+        <!-- COUNTRY FILTER -->
+
+        <select id="country">
+
+            <option value="in">
+                India
+            </option>
+
+            <option value="us">
+                USA
+            </option>
+
+            <option value="gb">
+                UK
+            </option>
+
+        </select>
+
+        <!-- SEARCH INPUT -->
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search News"
+        >
+
+        <!-- SEARCH BUTTON -->
+
+        <button id="searchBtn">
+
+            Search
+
+        </button>
+
+    </section>
+
+    <!-- NEWS CONTAINER -->
+
+    <section
+        class="news-container"
+        id="newsContainer"
+    >
+
+        <!-- NEWS CARDS WILL COME HERE -->
+
+    </section>
+
+    <!-- JAVASCRIPT FILES -->
+
+    <script type="module"
+    src="js/fetchNews.js"></script>
+
+    <script type="module"
+    src="js/app.js"></script>
+
+</body>
+
+</html>
