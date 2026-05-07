@@ -5,19 +5,19 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-body{
+body {
     background-color: #f4f4f4;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column; /* Stack navbar on top of form */
 }
 
-.auth-container{
-    width: 100%;
+.auth-container {
+    flex-grow: 1; /* Take up remaining space */
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 20px;
 }
 
 .auth-form{
@@ -64,3 +64,4 @@ body{
     text-decoration: none;
     color: #2563eb;
 }
+

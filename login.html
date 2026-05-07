@@ -4,33 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/auth.css">
 </head>
 <body>
 
+    <nav class="navbar">
+        <div class="logo">NewsSpeaks</div>
+        <div class="right-nav">
+            <a href="index.html" class="home-btn">Home</a>
+        </div>
+    </nav>
+
     <div class="auth-container">
-
         <form class="auth-form" id="loginForm">
-
             <h2>Login</h2>
-
             <input type="email" id="loginEmail" placeholder="Enter Email" required>
-
             <input type="password" id="loginPassword" placeholder="Enter Password" required>
-
             <button type="submit">Login</button>
-
             <p>
                 Don't have an account?
                 <a href="signup.html">Signup</a>
             </p>
-
         </form>
-
     </div>
 
     <script type="module" src="js/auth.js"></script>
-
 </body>
 </html>

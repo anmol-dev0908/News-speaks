@@ -4,38 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
-
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/auth.css">
 </head>
 <body>
 
-    <div class="auth-container">
-
+    <nav class="navbar">
+        <div class="logo">NewsSpeaks</div>
+        <div class="right-nav">
+            <a href="index.html" class="home-btn">Home</a>
+        </div>
+    </nav> <div class="auth-container">
         <form class="auth-form" id="signupForm">
-
             <h2>Create Account</h2>
-
             <input type="text" id="name" placeholder="Enter Name" required>
-
             <input type="email" id="email" placeholder="Enter Email" required>
-
             <input type="password" id="password" placeholder="Enter Password" required>
-
             <input type="text" id="country" placeholder="Country">
-
             <input type="text" id="state" placeholder="State">
-
             <input type="text" id="district" placeholder="District">
-
             <button type="submit">Signup</button>
-
             <p>
                 Already have an account?
                 <a href="login.html">Login</a>
             </p>
-
         </form>
-
     </div>
 
     <script type="module" src="js/auth.js"></script>
