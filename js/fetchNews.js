@@ -1,3 +1,6 @@
+import { auth } from "./firebase.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
 const API_KEY = "pub_c319daa603ad48aa9811e6898d56b0bd";
 
 const newsContainer = document.getElementById("newsContainer");
@@ -14,23 +17,40 @@ let currentQuery = "breaking news";
 /* LOADING CONTROL */
 let isLoading = false;
 
+/* LOGIN TRACKING */
+let isLoggedIn = false;
+
+// Check user authentication status on page load
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        isLoggedIn = true;
+        // Only fetch initial news if the user is logged in
+        fetchNews();
+    } else {
+        isLoggedIn = false;
+        // Optional: Show a message in the container for guests
+        newsContainer.innerHTML = `<p style="grid-column: 1/-1; text-align: center; padding: 20px;">
+            Please <a href="signup.html">Create an Account</a> or <a href="login.html">Login</a> to view the latest news.
+        </p>`;
+    }
+});
+
 /* FETCH NEWS FUNCTION */
 async function fetchNews(
     query = "breaking news",
     country = "in",
     page = 1
 ){
-    if(isLoading) return;
+    // Safety check: Don't fetch if already loading or if user is not logged in
+    if(isLoading || !isLoggedIn) return;
     isLoading = true;
 
     try {
-        // Updated URL for NewsData.io using HTTPS
         const url = `https://newsdata.io/api/1/latest?apikey=${API_KEY}&q=${query}&country=${country}&language=en`;
 
         const response = await fetch(url);
         const data = await response.json();
 
-        // NewsData.io uses 'results' instead of 'articles'
         displayNews(data.results);
 
     } catch(error) {
@@ -43,7 +63,6 @@ async function fetchNews(
 
 /* DISPLAY NEWS */
 function displayNews(results) {
-    // Clear container before adding new results
     if (currentPage === 1) {
         newsContainer.innerHTML = "";
     }
@@ -59,7 +78,6 @@ function displayNews(results) {
         const card = document.createElement("div");
         card.classList.add("news-card");
 
-        // NewsData.io uses 'image_url' and 'link' instead of 'image' and 'url'
         card.innerHTML = `
             <img
                 src="${article.image_url || 'https://via.placeholder.com/300'}"
@@ -81,11 +99,15 @@ function displayNews(results) {
     });
 }
 
-/* INITIAL NEWS */
-fetchNews();
-
-/* SEARCH NEWS */
+/* SEARCH NEWS - WITH REDIRECT LOGIC */
 searchBtn.addEventListener("click", () => {
+    if (!isLoggedIn) {
+        // Redirect guest users to signup page
+        alert("Please create an account to use the search feature!");
+        window.location.href = "signup.html";
+        return;
+    }
+
     newsContainer.innerHTML = "";
     currentPage = 1;
     currentQuery = searchInput.value || "breaking news";
@@ -99,6 +121,9 @@ searchBtn.addEventListener("click", () => {
 
 /* COUNTRY CHANGE */
 countrySelect.addEventListener("change", () => {
+    // Only allow changing filters if logged in
+    if (!isLoggedIn) return;
+
     newsContainer.innerHTML = "";
     currentPage = 1;
     fetchNews(
@@ -111,11 +136,10 @@ countrySelect.addEventListener("change", () => {
 /* INFINITE SCROLL */
 window.addEventListener("scroll", () => {
     if (
+        isLoggedIn && // Only scroll if logged in
         window.innerHeight + window.scrollY >=
         document.body.offsetHeight - 500
     ) {
-        // Note: NewsData.io pagination works differently (using nextPage tokens)
-        // For a basic fix, we prevent duplicate calls here.
         if (!isLoading) {
             currentPage++;
             fetchNews(
@@ -126,3 +150,10 @@ window.addEventListener("scroll", () => {
         }
     }
 });
+
+// Change the guest message line to this:
+newsContainer.innerHTML = `
+    <div class="auth-prompt">
+        <p>Please <a href="signup.html">Create an Account</a> or <a href="login.html">Login</a> to view the latest news.</p>
+    </div>
+`;

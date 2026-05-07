@@ -229,3 +229,37 @@ body{
 
     background-color: #1d4ed8;
 }
+/* AUTH PROMPT STYLES */
+.auth-prompt {
+    grid-column: 1 / -1; /* Spans across all grid columns */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    margin: 20px auto;
+    max-width: 600px;
+    border: 1px solid #e5e7eb;
+}
+
+.auth-prompt p {
+    font-size: 20px;
+    color: #374151;
+    font-weight: 500;
+}
+
+.auth-prompt a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0 5px;
+    border-bottom: 2px solid transparent;
+    transition: 0.3s;
+}
+
+.auth-prompt a:hover {
+    color: #1d4ed8;
+    border-bottom: 2px solid #1d4ed8;
+}
