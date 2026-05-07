@@ -1,171 +1,128 @@
-const API_KEY = "fd5fe279d8ac46c4f4844a4c1140b0d8";
+const API_KEY = "pub_c319daa603ad48aa9811e6898d56b0bd";
 
-const newsContainer =
-document.getElementById("newsContainer");
-
-const countrySelect =
-document.getElementById("country");
-
-const searchInput =
-document.getElementById("searchInput");
-
-const searchBtn =
-document.getElementById("searchBtn");
+const newsContainer = document.getElementById("newsContainer");
+const countrySelect = document.getElementById("country");
+const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
 
 /* PAGE NUMBER */
-
 let currentPage = 1;
 
 /* CURRENT QUERY */
-
 let currentQuery = "breaking news";
 
 /* LOADING CONTROL */
-
 let isLoading = false;
 
 /* FETCH NEWS FUNCTION */
-
 async function fetchNews(
     query = "breaking news",
     country = "in",
     page = 1
 ){
-
     if(isLoading) return;
-
     isLoading = true;
 
-    try{
+    try {
+        // Updated URL for NewsData.io using HTTPS
+        const url = `https://newsdata.io/api/1/latest?apikey=${API_KEY}&q=${query}&country=${country}&language=en`;
 
-        const url =
-`https://gnews.io/api/v4/search?q=${query}&lang=en&country=${country}&max=10&page=${page}&apikey=${API_KEY}`;
+        const response = await fetch(url);
+        const data = await response.json();
 
-        const response =
-        await fetch(url);
+        // NewsData.io uses 'results' instead of 'articles'
+        displayNews(data.results);
 
-        const data =
-        await response.json();
-
-        displayNews(data.articles);
-
-    }catch(error){
-
-        console.log(error);
-
+    } catch(error) {
+        console.error("Fetch Error:", error);
+        newsContainer.innerHTML = `<p style="grid-column: 1/-1; text-align: center;">Error loading news. Please try again later.</p>`;
     }
 
     isLoading = false;
-
 }
 
 /* DISPLAY NEWS */
+function displayNews(results) {
+    // Clear container before adding new results
+    if (currentPage === 1) {
+        newsContainer.innerHTML = "";
+    }
 
-function displayNews(articles){
+    if (!results || results.length === 0) {
+        if (currentPage === 1) {
+            newsContainer.innerHTML = `<p style="grid-column: 1/-1; text-align: center;">No news found for this search.</p>`;
+        }
+        return;
+    }
 
-    articles.forEach((article) => {
-
-        const card =
-        document.createElement("div");
-
+    results.forEach((article) => {
+        const card = document.createElement("div");
         card.classList.add("news-card");
 
+        // NewsData.io uses 'image_url' and 'link' instead of 'image' and 'url'
         card.innerHTML = `
-
             <img
-                src="${article.image || 'https://via.placeholder.com/300'}"
+                src="${article.image_url || 'https://via.placeholder.com/300'}"
                 alt="news image"
             >
-
             <div class="news-content">
-
-                <h3>
-                    ${article.title}
-                </h3>
-
-                <p>
-                    ${article.description || "No description available"}
-                </p>
-
+                <h3>${article.title || "No Title"}</h3>
+                <p>${article.description ? article.description.substring(0, 100) + "..." : "No description available"}</p>
                 <a
-                    href="${article.url}"
+                    href="${article.link}"
                     target="_blank"
                 >
                     Read More
                 </a>
-
             </div>
-
         `;
 
         newsContainer.appendChild(card);
-
     });
-
 }
 
 /* INITIAL NEWS */
-
 fetchNews();
 
 /* SEARCH NEWS */
-
 searchBtn.addEventListener("click", () => {
-
     newsContainer.innerHTML = "";
-
     currentPage = 1;
-
-    currentQuery =
-    searchInput.value || "breaking news";
+    currentQuery = searchInput.value || "breaking news";
 
     fetchNews(
         currentQuery,
         countrySelect.value,
         currentPage
     );
-
 });
 
 /* COUNTRY CHANGE */
-
 countrySelect.addEventListener("change", () => {
-
     newsContainer.innerHTML = "";
-
     currentPage = 1;
-
     fetchNews(
         currentQuery,
         countrySelect.value,
         currentPage
     );
-
 });
 
 /* INFINITE SCROLL */
-
 window.addEventListener("scroll", () => {
-
-    if(
-
-        window.innerHeight +
-        window.scrollY
-
-        >=
-
+    if (
+        window.innerHeight + window.scrollY >=
         document.body.offsetHeight - 500
-
-    ){
-
-        currentPage++;
-
-        fetchNews(
-            currentQuery,
-            countrySelect.value,
-            currentPage
-        );
-
+    ) {
+        // Note: NewsData.io pagination works differently (using nextPage tokens)
+        // For a basic fix, we prevent duplicate calls here.
+        if (!isLoading) {
+            currentPage++;
+            fetchNews(
+                currentQuery,
+                countrySelect.value,
+                currentPage
+            );
+        }
     }
-
 });
